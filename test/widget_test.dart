@@ -12,17 +12,11 @@ import 'package:earnifi/feature/withdraw/presentation/withdraw_screen.dart';
 import 'package:earnifi/feature/dashboard/domain/loan_entity.dart';
 
 void main() {
-  testWidgets('LoaderScreen displays message and animation', (
-    WidgetTester tester,
-  ) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: LoaderScreen(message: 'We are setting up for you...'),
-      ),
-    );
+  testWidgets('LoaderScreen displays message and animation', (WidgetTester tester) async {
+    await tester.pumpWidget(const MaterialApp(home: LoaderScreen(message: 'We are setting up for you...')));
     expect(find.text('We are setting up for you...'), findsOneWidget);
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    expect(find.byIcon(Icons.bolt), findsOneWidget);
+    expect(find.byIcon(Icons.bubble_chart), findsOneWidget);
   });
 
   testWidgets('WithdrawScreen validation prevents over-limit withdrawal', (
