@@ -9,10 +9,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<FetchLoanData>(_onFetchLoanData);
   }
 
-  Future<void> _onFetchLoanData(
-      FetchLoanData event,
-      Emitter<DashboardState> emit,
-      ) async {
+  Future<void> _onFetchLoanData(FetchLoanData event, Emitter<DashboardState> emit) async {
     emit(const DashboardLoading());
     try {
       final loan = await _loanUseCase.execute();

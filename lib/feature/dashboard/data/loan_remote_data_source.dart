@@ -11,11 +11,10 @@ class LoanRemoteDataSource {
   Future<LoanEntity> fetchLoanDetails() async {
     try {
       // Simulated API delay
-      await Future.delayed(const Duration(milliseconds: 2000));
+      await Future.delayed(const Duration(milliseconds: 3000));
       //TODO:use of real api
       // final response = await _dioClient.get(ApiEndpoints.loanDetails);
 
-      // Assume mock response format
       return LoanEntity.fromJson(ApiResponseConst.loanDetails);
     } on DioException catch (e) {
       throw Exception('Failed to load loan data: ${e.message}');

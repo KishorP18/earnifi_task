@@ -52,3 +52,7 @@ flutter run
 ```bash
 flutter test
 ```
+
+## 🎬 Demo Preview
+
+![Earnifi Demo](assets/earnifi_demo.gif)
