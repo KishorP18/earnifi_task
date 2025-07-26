@@ -10,7 +10,7 @@ A Flutter app that simulates a user's interaction with Earnifi's lending service
   separation[https://blog.codemagic.io/clean-architecture-explored/]
 - **State Management**: BLoC (flutter_bloc)
 - **Dependency Injection**: GetIt
-- **Networking**: Dio (simulated)
+- **Networking**: Dio
 - **Code Generation**: Freezed & Json Serializable
 - **Crash Reporting**: Firebase Crashlytics(For now I have used Flutter's built-in error handling)
 
