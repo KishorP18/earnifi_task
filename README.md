@@ -2,6 +2,9 @@
 
 A Flutter app that simulates a user's interaction with Earnifi's lending services.
 
+## 🎬 Demo Preview
+
+![Earnifi Demo](assets/earnifi_demo.gif)
 ---
 
 ## 🧱 Architecture
@@ -53,6 +56,3 @@ flutter run
 flutter test
 ```
 
-## 🎬 Demo Preview
-
-![Earnifi Demo](assets/earnifi_demo.gif)
