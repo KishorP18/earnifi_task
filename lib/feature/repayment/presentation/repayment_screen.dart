@@ -1,3 +1,4 @@
+import 'package:earnifi/core/widgets/error_view.dart';
 import 'package:earnifi/feature/repayment/domain/repayment_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,30 +31,20 @@ class _RepaymentScreenState extends State<RepaymentScreen> {
 
   void _scrollListener() {
     if (_controller.position.pixels >= _controller.position.maxScrollExtent) {
-      _bloc.add(
-        RepaymentEvent.fetch(
-          page: ++_page,
-          query: _search.text,
-          status: _statusFilter,
-        ),
-      );
+      _bloc.add(RepaymentEvent.fetch(page: ++_page, query: _search.text, status: _statusFilter));
     }
   }
 
   void _onSearchChanged(String query) {
     _page = 0;
-    _bloc.add(
-      RepaymentEvent.fetch(page: 0, query: query, status: _statusFilter),
-    );
+    _bloc.add(RepaymentEvent.fetch(page: 0, query: query, status: _statusFilter));
   }
 
   void _onStatusChanged(String? status) {
     if (status == null) return;
     setState(() => _statusFilter = status);
     _page = 0;
-    _bloc.add(
-      RepaymentEvent.fetch(page: 0, query: _search.text, status: status),
-    );
+    _bloc.add(RepaymentEvent.fetch(page: 0, query: _search.text, status: status));
   }
 
   @override
@@ -61,11 +52,7 @@ class _RepaymentScreenState extends State<RepaymentScreen> {
     return BlocProvider.value(
       value: _bloc,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Repayment History'),
-          backgroundColor: AppTheme.white,
-          elevation: 1,
-        ),
+        appBar: AppBar(title: const Text('Repayment History'), backgroundColor: AppTheme.white, elevation: 1),
         body: Column(
           children: [
             Padding(
@@ -78,9 +65,7 @@ class _RepaymentScreenState extends State<RepaymentScreen> {
                       onChanged: _onSearchChanged,
                       decoration: InputDecoration(
                         labelText: 'Search by status or amount',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                         prefixIcon: const Icon(Icons.search),
                         filled: true,
                         fillColor: AppTheme.lightGray,
@@ -92,10 +77,7 @@ class _RepaymentScreenState extends State<RepaymentScreen> {
                     value: _statusFilter,
                     items: const [
                       DropdownMenuItem(value: 'All', child: Text('All')),
-                      DropdownMenuItem(
-                        value: 'Success',
-                        child: Text('Success'),
-                      ),
+                      DropdownMenuItem(value: 'Success', child: Text('Success')),
                       DropdownMenuItem(value: 'Failed', child: Text('Failed')),
                     ],
                     onChanged: _onStatusChanged,
@@ -110,8 +92,7 @@ class _RepaymentScreenState extends State<RepaymentScreen> {
               child: BlocBuilder<RepaymentBloc, RepaymentState>(
                 builder: (context, state) {
                   return switch (state) {
-                    RepaymentInitial() ||
-                    RepaymentLoading() => const _LoadingList(),
+                    RepaymentInitial() || RepaymentLoading() => const _LoadingList(),
                     RepaymentLoaded(:final data, :final hasMore) =>
                       data.isEmpty
                           ? const _EmptyState()
@@ -122,65 +103,39 @@ class _RepaymentScreenState extends State<RepaymentScreen> {
                                 if (i == data.length && hasMore) {
                                   return const Padding(
                                     padding: EdgeInsets.symmetric(vertical: 16),
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        color: AppTheme.primaryBlue,
-                                      ),
-                                    ),
+                                    child: Center(child: CircularProgressIndicator(color: AppTheme.primaryBlue)),
                                   );
                                 }
                                 final item = data[i];
                                 // Filter by status and search locally as well (for demo, since backend is simulated)
-                                if ((_statusFilter != 'All' &&
-                                        item.status != _statusFilter) ||
+                                if ((_statusFilter != 'All' && item.status != _statusFilter) ||
                                     (_search.text.isNotEmpty &&
-                                        !item.status.toLowerCase().contains(
-                                          _search.text.toLowerCase(),
-                                        ) &&
-                                        !item.amount.toString().contains(
-                                          _search.text,
-                                        ))) {
+                                        !item.status.toLowerCase().contains(_search.text.toLowerCase()) &&
+                                        !item.amount.toString().contains(_search.text))) {
                                   return const SizedBox.shrink();
                                 }
                                 return Card(
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
+                                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                   child: ListTile(
                                     leading: CircleAvatar(
                                       backgroundColor: item.status == 'Success'
-                                          ? AppTheme.successGreen.withOpacity(
-                                              0.1,
-                                            )
+                                          ? AppTheme.successGreen.withOpacity(0.1)
                                           : AppTheme.errorRed.withOpacity(0.1),
                                       child: Icon(
-                                        item.status == 'Success'
-                                            ? Icons.check
-                                            : Icons.close,
-                                        color: item.status == 'Success'
-                                            ? AppTheme.successGreen
-                                            : AppTheme.errorRed,
+                                        item.status == 'Success' ? Icons.check : Icons.close,
+                                        color: item.status == 'Success' ? AppTheme.successGreen : AppTheme.errorRed,
                                       ),
                                     ),
                                     title: Text(
                                       '₹${item.amount.toStringAsFixed(2)}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: const TextStyle(fontWeight: FontWeight.bold),
                                     ),
-                                    subtitle: Text(
-                                      '${item.date.day}/${item.date.month}/${item.date.year}',
-                                    ),
+                                    subtitle: Text('${item.date.day}/${item.date.month}/${item.date.year}'),
                                     trailing: Text(
                                       item.status,
                                       style: TextStyle(
-                                        color: item.status == 'Success'
-                                            ? AppTheme.successGreen
-                                            : AppTheme.errorRed,
+                                        color: item.status == 'Success' ? AppTheme.successGreen : AppTheme.errorRed,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -188,17 +143,19 @@ class _RepaymentScreenState extends State<RepaymentScreen> {
                                 );
                               },
                             ),
-                    RepaymentError(:final message) => Center(
-                      child: Text(
-                        'Error: $message',
-                        style: const TextStyle(color: AppTheme.errorRed),
-                      ),
+                    RepaymentError(:final message) => ErrorView(
+                      message: message,
+                      onRetry: () {
+                        _page = 0;
+                        _bloc.add(RepaymentEvent.fetch(page: 0, query: _search.text, status: _statusFilter));
+                      },
                     ),
-                    RepaymentState() => Center(
-                      child: Text(
-                        'Something went wrong',
-                        style: const TextStyle(color: AppTheme.errorRed),
-                      ),
+                    RepaymentState() => ErrorView(
+                      message: 'Something went wrong please try again later.',
+                      onRetry: () {
+                        _page = 0;
+                        _bloc.add(RepaymentEvent.fetch(page: 0, query: _search.text, status: _statusFilter));
+                      },
                     ),
                   };
                 },
@@ -220,6 +177,7 @@ class _RepaymentScreenState extends State<RepaymentScreen> {
 
 class _LoadingList extends StatelessWidget {
   const _LoadingList();
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -228,10 +186,7 @@ class _LoadingList extends StatelessWidget {
       separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (_, __) => Container(
         height: 64,
-        decoration: BoxDecoration(
-          color: AppTheme.lightGray,
-          borderRadius: BorderRadius.circular(12),
-        ),
+        decoration: BoxDecoration(color: AppTheme.lightGray, borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -239,22 +194,16 @@ class _LoadingList extends StatelessWidget {
 
 class _EmptyState extends StatelessWidget {
   const _EmptyState();
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.receipt_long,
-            size: 64,
-            color: AppTheme.neutralGray.withOpacity(0.3),
-          ),
+          Icon(Icons.receipt_long, size: 64, color: AppTheme.neutralGray.withOpacity(0.3)),
           const SizedBox(height: 16),
-          const Text(
-            'No repayments found',
-            style: TextStyle(fontSize: 18, color: AppTheme.neutralGray),
-          ),
+          const Text('No repayments found', style: TextStyle(fontSize: 18, color: AppTheme.neutralGray)),
           const SizedBox(height: 8),
           const Text(
             'Try a different search or check back later.',
