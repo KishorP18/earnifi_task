@@ -19,17 +19,18 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$RepaymentEvent {
   int get page => throw _privateConstructorUsedError;
   String get query => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int page, String query) fetch,
+    required TResult Function(int page, String query, String status) fetch,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int page, String query)? fetch,
+    TResult? Function(int page, String query, String status)? fetch,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int page, String query)? fetch,
+    TResult Function(int page, String query, String status)? fetch,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -60,7 +61,7 @@ abstract class $RepaymentEventCopyWith<$Res> {
     $Res Function(RepaymentEvent) then,
   ) = _$RepaymentEventCopyWithImpl<$Res, RepaymentEvent>;
   @useResult
-  $Res call({int page, String query});
+  $Res call({int page, String query, String status});
 }
 
 /// @nodoc
@@ -77,7 +78,11 @@ class _$RepaymentEventCopyWithImpl<$Res, $Val extends RepaymentEvent>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? page = null, Object? query = null}) {
+  $Res call({
+    Object? page = null,
+    Object? query = null,
+    Object? status = null,
+  }) {
     return _then(
       _value.copyWith(
             page: null == page
@@ -87,6 +92,10 @@ class _$RepaymentEventCopyWithImpl<$Res, $Val extends RepaymentEvent>
             query: null == query
                 ? _value.query
                 : query // ignore: cast_nullable_to_non_nullable
+                      as String,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
                       as String,
           )
           as $Val,
@@ -103,7 +112,7 @@ abstract class _$$FetchRepaymentsImplCopyWith<$Res>
   ) = __$$FetchRepaymentsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int page, String query});
+  $Res call({int page, String query, String status});
 }
 
 /// @nodoc
@@ -119,7 +128,11 @@ class __$$FetchRepaymentsImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? page = null, Object? query = null}) {
+  $Res call({
+    Object? page = null,
+    Object? query = null,
+    Object? status = null,
+  }) {
     return _then(
       _$FetchRepaymentsImpl(
         page: null == page
@@ -130,6 +143,10 @@ class __$$FetchRepaymentsImplCopyWithImpl<$Res>
             ? _value.query
             : query // ignore: cast_nullable_to_non_nullable
                   as String,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String,
       ),
     );
   }
@@ -138,7 +155,11 @@ class __$$FetchRepaymentsImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FetchRepaymentsImpl implements FetchRepayments {
-  const _$FetchRepaymentsImpl({this.page = 0, this.query = ''});
+  const _$FetchRepaymentsImpl({
+    this.page = 0,
+    this.query = '',
+    this.status = 'All',
+  });
 
   @override
   @JsonKey()
@@ -146,10 +167,13 @@ class _$FetchRepaymentsImpl implements FetchRepayments {
   @override
   @JsonKey()
   final String query;
+  @override
+  @JsonKey()
+  final String status;
 
   @override
   String toString() {
-    return 'RepaymentEvent.fetch(page: $page, query: $query)';
+    return 'RepaymentEvent.fetch(page: $page, query: $query, status: $status)';
   }
 
   @override
@@ -158,11 +182,12 @@ class _$FetchRepaymentsImpl implements FetchRepayments {
         (other.runtimeType == runtimeType &&
             other is _$FetchRepaymentsImpl &&
             (identical(other.page, page) || other.page == page) &&
-            (identical(other.query, query) || other.query == query));
+            (identical(other.query, query) || other.query == query) &&
+            (identical(other.status, status) || other.status == status));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, page, query);
+  int get hashCode => Object.hash(runtimeType, page, query, status);
 
   /// Create a copy of RepaymentEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -178,27 +203,27 @@ class _$FetchRepaymentsImpl implements FetchRepayments {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int page, String query) fetch,
+    required TResult Function(int page, String query, String status) fetch,
   }) {
-    return fetch(page, query);
+    return fetch(page, query, status);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int page, String query)? fetch,
+    TResult? Function(int page, String query, String status)? fetch,
   }) {
-    return fetch?.call(page, query);
+    return fetch?.call(page, query, status);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int page, String query)? fetch,
+    TResult Function(int page, String query, String status)? fetch,
     required TResult orElse(),
   }) {
     if (fetch != null) {
-      return fetch(page, query);
+      return fetch(page, query, status);
     }
     return orElse();
   }
@@ -233,13 +258,18 @@ class _$FetchRepaymentsImpl implements FetchRepayments {
 }
 
 abstract class FetchRepayments implements RepaymentEvent {
-  const factory FetchRepayments({final int page, final String query}) =
-      _$FetchRepaymentsImpl;
+  const factory FetchRepayments({
+    final int page,
+    final String query,
+    final String status,
+  }) = _$FetchRepaymentsImpl;
 
   @override
   int get page;
   @override
   String get query;
+  @override
+  String get status;
 
   /// Create a copy of RepaymentEvent
   /// with the given fields replaced by the non-null parameter values.

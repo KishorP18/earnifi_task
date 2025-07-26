@@ -5,10 +5,15 @@ import '../../../core/network/dio_client.dart';
 
 class RepaymentRepositoryImpl implements RepaymentRepository {
   final RepaymentRemoteDataSource _remote;
-  RepaymentRepositoryImpl(DioClient client) : _remote = RepaymentRemoteDataSource(client);
+  RepaymentRepositoryImpl(DioClient client)
+    : _remote = RepaymentRemoteDataSource(client);
 
   @override
-  Future<List<RepaymentEntity>> fetchRepayments({required int page, required String query}) {
-    return _remote.getRepayments(page, query);
+  Future<List<RepaymentEntity>> fetchRepayments({
+    required int page,
+    required String query,
+    required String status,
+  }) {
+    return _remote.getRepayments(page, query, status);
   }
 }
