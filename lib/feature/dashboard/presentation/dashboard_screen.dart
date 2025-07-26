@@ -22,6 +22,7 @@ class DashboardScreen extends StatelessWidget {
       create: (_) => DashboardBloc(locator<LoanUseCase>())..add(const FetchLoanData()),
       child: Scaffold(
         appBar: AppBar(title: const Text('Earnifi'), backgroundColor: AppTheme.white, elevation: 1),
+
         body: BlocBuilder<DashboardBloc, DashboardState>(
           builder: (context, state) {
             return switch (state) {
@@ -132,19 +133,6 @@ class DashboardDetails extends StatelessWidget {
           const SizedBox(height: 16),
 
           _ActionButton(
-            title: 'View Loan Summary',
-            subtitle: 'See detailed loan information',
-            icon: Icons.summarize,
-            onTap: () => showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              builder: (_) => LoanSummaryModal(loan: loan),
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          _ActionButton(
             title: 'Withdraw Funds',
             subtitle: 'Access your available credit',
             icon: Icons.account_balance_wallet_outlined,
@@ -157,6 +145,18 @@ class DashboardDetails extends StatelessWidget {
                 context.read<DashboardBloc>().emit(DashboardState.loaded(updatedLoan));
               }
             },
+          ),
+          const SizedBox(height: 12),
+          _ActionButton(
+            title: 'View Loan Summary',
+            subtitle: 'See detailed loan information',
+            icon: Icons.summarize,
+            onTap: () => showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (_) => LoanSummaryModal(loan: loan),
+            ),
           ),
           const SizedBox(height: 12),
 
@@ -296,6 +296,25 @@ class _ActionButton extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class FabWithdrawButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const FabWithdrawButton({super.key, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton.extended(
+      onPressed: onTap,
+      label: const Text('Withdraw'),
+      icon: const Icon(Icons.attach_money),
+      backgroundColor: Colors.indigo,
+      foregroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 6,
     );
   }
 }
