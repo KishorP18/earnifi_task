@@ -10,6 +10,7 @@ import 'bloc/dashboard_bloc.dart';
 import 'bloc/dashboard_event_state.dart';
 import 'loan_summary_modal.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:earnifi/feature/withdraw/presentation/withdraw_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -17,9 +18,14 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => DashboardBloc(locator<LoanUseCase>())..add(const FetchLoanData()),
+      create: (_) =>
+          DashboardBloc(locator<LoanUseCase>())..add(const FetchLoanData()),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Earnifi'), backgroundColor: AppTheme.white, elevation: 1),
+        appBar: AppBar(
+          title: const Text('Earnifi'),
+          backgroundColor: AppTheme.white,
+          elevation: 1,
+        ),
         body: BlocBuilder<DashboardBloc, DashboardState>(
           builder: (context, state) {
             return switch (state) {
@@ -29,7 +35,10 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     CircularProgressIndicator(color: AppTheme.primaryBlue),
                     SizedBox(height: 16),
-                    Text('Initializing...', style: TextStyle(color: AppTheme.neutralGray)),
+                    Text(
+                      'Initializing...',
+                      style: TextStyle(color: AppTheme.neutralGray),
+                    ),
                   ],
                 ),
               ),
@@ -39,7 +48,10 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     CircularProgressIndicator(color: AppTheme.primaryBlue),
                     SizedBox(height: 16),
-                    Text('Loading your financial data...', style: TextStyle(color: AppTheme.neutralGray)),
+                    Text(
+                      'Loading your financial data...',
+                      style: TextStyle(color: AppTheme.neutralGray),
+                    ),
                   ],
                 ),
               ),
@@ -88,7 +100,8 @@ class DashboardDetails extends StatelessWidget {
       ),
       _DashboardCardData(
         title: 'Next Repayment',
-        value: '₹${loan.nextRepaymentAmount.toStringAsFixed(2)} on ${_formatDate(loan.nextRepaymentDate)}',
+        value:
+            '₹${loan.nextRepaymentAmount.toStringAsFixed(2)} on ${_formatDate(loan.nextRepaymentDate)}',
         icon: Icons.event,
         gradient: const LinearGradient(
           colors: [AppTheme.warningOrange, Color(0xFFF59E0B)],
@@ -107,16 +120,29 @@ class DashboardDetails extends StatelessWidget {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(gradient: AppTheme.primaryGradient, borderRadius: BorderRadius.circular(16)),
+            decoration: BoxDecoration(
+              gradient: AppTheme.primaryGradient,
+              borderRadius: BorderRadius.circular(16),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
                   'Welcome back Kishor!',
-                  style: TextStyle(color: AppTheme.white, fontSize: 18, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    color: AppTheme.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 8),
-                Text('Your financial overview', style: TextStyle(color: AppTheme.white.withOpacity(0.9), fontSize: 14)),
+                Text(
+                  'Your financial overview',
+                  style: TextStyle(
+                    color: AppTheme.white.withOpacity(0.9),
+                    fontSize: 14,
+                  ),
+                ),
               ],
             ),
           ),
@@ -143,7 +169,11 @@ class DashboardDetails extends StatelessWidget {
           // Action Buttons
           const Text(
             'Quick Actions',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppTheme.black),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.black,
+            ),
           ),
           const SizedBox(height: 16),
 
@@ -164,7 +194,17 @@ class DashboardDetails extends StatelessWidget {
             title: 'Withdraw Funds',
             subtitle: 'Access your available credit',
             icon: Icons.account_balance_wallet_outlined,
-            onTap: () => Navigator.pushNamed(context, AppRouter.withdrawRoute),
+            onTap: () async {
+              final updatedLoan = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => WithdrawScreen(loan: loan)),
+              );
+              if (updatedLoan != null && context.mounted) {
+                context.read<DashboardBloc>().emit(
+                  DashboardState.loaded(updatedLoan),
+                );
+              }
+            },
           ),
           const SizedBox(height: 12),
 
@@ -172,7 +212,8 @@ class DashboardDetails extends StatelessWidget {
             title: 'Repayment History',
             subtitle: 'View your payment records',
             icon: Icons.history,
-            onTap: () => Navigator.pushNamed(context, AppRouter.repaymentsRoute),
+            onTap: () =>
+                Navigator.pushNamed(context, AppRouter.repaymentsRoute),
           ),
         ],
       ),
@@ -212,7 +253,13 @@ class _DashboardCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: card.gradient,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: AppTheme.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -233,12 +280,20 @@ class _DashboardCard extends StatelessWidget {
                 children: [
                   Text(
                     card.title,
-                    style: const TextStyle(color: AppTheme.white, fontSize: 14, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                      color: AppTheme.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     card.value,
-                    style: const TextStyle(color: AppTheme.white, fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      color: AppTheme.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -256,7 +311,12 @@ class _ActionButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  const _ActionButton({required this.title, required this.subtitle, required this.icon, required this.onTap});
+  const _ActionButton({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -265,7 +325,13 @@ class _ActionButton extends StatelessWidget {
         color: AppTheme.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppTheme.lightGray),
-        boxShadow: [BoxShadow(color: AppTheme.black.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))],
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Material(
         color: Colors.transparent,
@@ -291,14 +357,28 @@ class _ActionButton extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppTheme.black),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.black,
+                        ),
                       ),
                       const SizedBox(height: 2),
-                      Text(subtitle, style: const TextStyle(fontSize: 12, color: AppTheme.neutralGray)),
+                      Text(
+                        subtitle,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppTheme.neutralGray,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                Icon(Icons.arrow_forward_ios, color: AppTheme.neutralGray, size: 16),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: AppTheme.neutralGray,
+                  size: 16,
+                ),
               ],
             ),
           ),

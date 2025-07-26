@@ -1,3 +1,4 @@
+import 'package:earnifi/feature/dashboard/domain/loan_entity.dart';
 import 'package:flutter/material.dart';
 
 import '../../feature/dashboard/presentation/dashboard_screen.dart';
@@ -14,7 +15,8 @@ class AppRouter {
       case initialRoute:
         return MaterialPageRoute(builder: (_) => const DashboardScreen());
       case withdrawRoute:
-        return MaterialPageRoute(builder: (_) => const WithdrawScreen());
+        final loan = settings.arguments as LoanEntity;
+        return MaterialPageRoute(builder: (_) => WithdrawScreen(loan: loan));
       case repaymentsRoute:
         return MaterialPageRoute(builder: (_) => const RepaymentScreen());
       default:
