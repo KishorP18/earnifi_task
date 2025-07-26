@@ -1,12 +1,27 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'core/di/service_locator.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/theme.dart';
 
-void main() {
-  setupLocator();
-  runApp(const EarnifiApp());
+Future<void> main() async {
+  FlutterError.onError = (FlutterErrorDetails details) {
+    debugPrint('Caught an error: $details');
+  };
+
+  runZonedGuarded<Future<void>>(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      setupLocator();
+      runApp(const EarnifiApp());
+    },
+    (error, stackTrace) {
+      debugPrint('Caught an error: $error');
+      debugPrint('Stack trace: $stackTrace');
+    },
+  );
 }
 
 class EarnifiApp extends StatelessWidget {
@@ -15,7 +30,7 @@ class EarnifiApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Earnifi Lending Dashboard',
+      title: 'Earnifi',
       theme: AppTheme.light,
       debugShowCheckedModeBanner: false,
       onGenerateRoute: AppRouter.generateRoute,

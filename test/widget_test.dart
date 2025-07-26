@@ -7,24 +7,40 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:earnifi/main.dart';
+import 'package:earnifi/core/widgets/loader_screen.dart';
+import 'package:earnifi/feature/withdraw/presentation/withdraw_screen.dart';
+import 'package:earnifi/feature/dashboard/domain/loan_entity.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    //await tester.pumpWidget(const MyApp());
+  testWidgets('LoaderScreen displays message and animation', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: LoaderScreen(message: 'We are setting up for you...'),
+      ),
+    );
+    expect(find.text('We are setting up for you...'), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byIcon(Icons.bolt), findsOneWidget);
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+  testWidgets('WithdrawScreen validation prevents over-limit withdrawal', (
+    WidgetTester tester,
+  ) async {
+    final loan = LoanEntity(
+      currentBalance: 1000,
+      creditLimit: 1000,
+      nextRepaymentAmount: 100,
+      nextRepaymentDate: DateTime.now(),
+      interestRate: 10,
+      totalDisbursed: 1000,
+      totalRepaid: 0,
+    );
+    await tester.pumpWidget(MaterialApp(home: WithdrawScreen(loan: loan)));
+    await tester.enterText(find.byType(TextField), '2000');
+    await tester.tap(find.byType(ElevatedButton));
     await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.textContaining('exceeds credit limit'), findsOneWidget);
   });
 }
