@@ -6,7 +6,7 @@ class DioClient {
 
   DioClient(this._dio) {
     _dio.options = BaseOptions(
-      baseUrl: 'https://mockapi.earnifi.dev', // Not used; simulated response
+      baseUrl: 'https://mockapi.earnifi.dev',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
     );
